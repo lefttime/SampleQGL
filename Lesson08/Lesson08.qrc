@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Resources/Glass.png</file>
+    </qresource>
+</RCC>
