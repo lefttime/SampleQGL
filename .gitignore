@@ -1,0 +1,38 @@
+# C++ objects and libs
+
+*.slo
+*.lo
+*.o
+*.a
+*.la
+*.lai
+*.so
+*.dll
+*.dylib
+
+# Qt-es
+ui_*
+*.pro.user
+*.pro.user.*
+moc_*.cpp
+qrc_*.cpp
+Makefile*
+*-build-*
+debug
+release
+
+# VS
+ipch
+moc
+ui
+Win32
+*.sdf
+*.sln
+*.suo
+*.vc*
+*.pdb
+*.user
+
+# MAC OS
+*.app
+.DS_Store
