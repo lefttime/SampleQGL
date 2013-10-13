@@ -25,7 +25,6 @@ private:
 
   class Lesson05Private;
   QScopedPointer<Lesson05Private>         _pd;
-
 };
 
 #endif // LESSON05_HPP

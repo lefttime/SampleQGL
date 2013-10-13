@@ -1,4 +1,4 @@
-#include "Lesson08.hpp"
+#include "Lesson18.hpp"
 
 #include <QPixmap>
 #include <QVector2D>
@@ -6,21 +6,28 @@
 #include <QVector4D>
 #include <QKeyEvent>
 
-class Lesson08::Lesson08Private
+int	part1;				        // Start Of Disc
+int	part2;				        // End Of Disc
+int	p1 = 0;				        // Increase 1
+int	p2 = 1;				        // Increase 2
+
+GLuint object = 0;			  // Which Object To Draw (NEW)
+GLUquadricObj* quadratic;	// Storage For Our Quadratic Objects
+
+class Lesson18::Lesson18Private
 {
 public:
 
-  Lesson08Private( Lesson08* me ) : m_self( me ) {
+  Lesson18Private( Lesson18* me ) : m_self( me ) {
   }
 
-  ~Lesson08Private() {
+  ~Lesson18Private() {
     m_self->deleteTexture( m_texture );
   }
 
   void init() {
     m_zOffset = -5.0f;
     m_bLight = true;
-    m_bBlend = false;
     m_rAngle = QVector2D(0, 0);
     m_rSpeed = QVector2D(0, 0);
 
@@ -86,11 +93,10 @@ public:
     glEnd();
   }
 
-  Lesson08*         m_self;
+  Lesson18*         m_self;
   GLuint            m_texture;
 
   bool              m_bLight;
-  bool              m_bBlend;
   QVector2D         m_rAngle;
   QVector2D         m_rSpeed;
   float             m_zOffset;
@@ -101,21 +107,22 @@ public:
   GLfloat           m_lPosition[4];
 };
 
-Lesson08::Lesson08( QWidget* parent ) : GLWidget( parent ), _pd( new Lesson08Private( this ) )
+Lesson18::Lesson18( QWidget* parent ) : GLWidget( parent ), _pd( new Lesson18Private( this ) )
 {
-  setWindowTitle( "Lesson08" );
+  setWindowTitle( "Lesson18" );
   _pd->init();
 }
 
-Lesson08::~Lesson08()
+Lesson18::~Lesson18()
 {
+  gluDeleteQuadric( quadratic );
 }
 
-void Lesson08::initializeGL()
+void Lesson18::initializeGL()
 {
   glEnable( GL_TEXTURE_2D );
   glShadeModel( GL_SMOOTH );
-  qglClearColor( Qt::black );
+  glClearColor( 0.0f, 0.0f, 0.0f, 0.5f );
 
   glClearDepth( 1.0f );
   glEnable( GL_DEPTH_TEST );
@@ -123,18 +130,19 @@ void Lesson08::initializeGL()
 
   glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
 
-  _pd->m_texture = bindTexture( QPixmap( ":/Resources/Glass.png" ), GL_TEXTURE_2D );
+  _pd->m_texture = bindTexture( QPixmap( ":/Resources/Wall.PNG" ), GL_TEXTURE_2D );
 
   glEnable( GL_LIGHT1 );
   glLightfv( GL_LIGHT1, GL_AMBIENT,  _pd->m_lAmbient  );
   glLightfv( GL_LIGHT1, GL_DIFFUSE,  _pd->m_lDiffuse  );
   glLightfv( GL_LIGHT1, GL_POSITION, _pd->m_lPosition );
 
-  glColor4f( 1.0f, 1.0f, 1.0f, 0.5f );
-  glBlendFunc( GL_SRC_ALPHA, GL_ONE );
+  quadratic = gluNewQuadric();							  // Create A Pointer To The Quadric Object (Return 0 If No Memory)
+  gluQuadricNormals( quadratic, GLU_SMOOTH );	// Create Smooth Normals
+  gluQuadricTexture( quadratic, GL_TRUE );		// Create Texture Coords
 }
 
-void Lesson08::paintGL()
+void Lesson18::paintGL()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
@@ -145,10 +153,47 @@ void Lesson08::paintGL()
   glRotatef( _pd->m_rAngle.y(), 0, 1, 0 );
 
   glBindTexture( GL_TEXTURE_2D, _pd->m_texture );
-  _pd->drawCube();
+  
+  switch( object ) {
+  case 0: _pd->drawCube(); break;
+
+  case 1: {
+    glTranslatef( 0.0f, 0.0f, -1.5f );					        // Center The Cylinder
+    gluCylinder( quadratic, 1.0f, 1.0f, 3.0f, 32, 32);	// A Cylinder With A Radius Of 0.5 And A Height Of 2
+  } break;
+
+  case 2: {
+    gluDisk( quadratic, 0.5f, 1.5f, 32, 32 );				    // Draw A Disc (CD Shape) With An Inner Radius Of 0.5, And An Outer Radius Of 2.  Plus A Lot Of Segments ;)
+  } break;
+
+  case 3: {
+    gluSphere( quadratic, 1.3f, 32, 32 );				        // Draw A Sphere With A Radius Of 1 And 16 Longitude And 16 Latitude Segments
+  } break;
+
+  case 4: {
+    glTranslatef( 0.0f, 0.0f, -1.5f );					        // Center The Cone
+    gluCylinder( quadratic, 1.0f, 0.0f, 3.0f, 32, 32 ); // A Cone With A Bottom Radius Of .5 And A Height Of 2
+  } break;
+
+  case 5: {
+    part1 += p1;
+    part2 += p2;
+    if( part1 > 359 ) {									                // 360 Degrees
+      p1 = 0;
+      p2 = 1;
+      part1 = 0;
+      part2 = 0;
+    }
+    if( part2 > 359 )	{								                  // 360 Degrees
+      p1 = 1;
+      p2 = 0;
+    }
+    gluPartialDisk( quadratic, 0.5f, 1.5f, 32, 32, part1, part2-part1 );	// A Disk Like The One Before
+  } break;
+  }
 }
 
-void Lesson08::resizeGL(int width, int height)
+void Lesson18::resizeGL( int width, int height )
 {
   glViewport( 0, 0, width, height );
 
@@ -160,20 +205,14 @@ void Lesson08::resizeGL(int width, int height)
   glMatrixMode( GL_MODELVIEW );
 }
 
-void Lesson08::idleFunc()
+void Lesson18::idleFunc()
 {
   _pd->m_rAngle += _pd->m_rSpeed;
   updateGL();
 }
 
-void Lesson08::keyStatusChanged()
+void Lesson18::keyStatusChanged()
 {
-  if( keyStatus( Qt::Key_B ) == ON ) {
-    _pd->m_bBlend = !_pd->m_bBlend;
-    _pd->m_bBlend ? glEnable( GL_BLEND ) : glDisable( GL_BLEND );
-    _pd->m_bBlend ? glDisable( GL_DEPTH_TEST ) : glEnable( GL_DEPTH_TEST );
-  }
-
   if( keyStatus( Qt::Key_F ) == ON ) {
     _pd->changeFilter();
   }
@@ -183,11 +222,15 @@ void Lesson08::keyStatusChanged()
     _pd->m_bLight ? glEnable( GL_LIGHTING ) : glDisable( GL_LIGHTING );
   }
 
-  if( keyStatus( Qt::Key_PageUp ) == ON ) {
+  if( keyStatus( Qt::Key_Space ) == ON ) {
+    object = (object+1) % 6;
+  }
+
+  if( keyStatus( Qt::Key_Q ) == ON || keyStatus( Qt::Key_PageUp ) == ON ) {
     _pd->m_zOffset -= 0.02f;
   }
 
-  if( keyStatus( Qt::Key_PageDown ) == ON ) {
+  if( keyStatus( Qt::Key_E ) == ON || keyStatus( Qt::Key_PageDown ) == ON ) {
     _pd->m_zOffset += 0.02f;
   }
 

@@ -199,17 +199,15 @@ void Lesson10::resizeGL( int width, int height )
 
 }
 
-void Lesson10::keyPressEvent( QKeyEvent* event )
+void Lesson10::keyStatusChanged()
 {
-  switch( event->key() ) {
-  case Qt::Key_B: {
+  if( keyStatus( Qt::Key_B ) == ON ) {
     _pd->m_bBlend = !_pd->m_bBlend;
     _pd->m_bBlend ? glEnable( GL_BLEND ) : glDisable( GL_BLEND );
     _pd->m_bBlend ? glDisable( GL_DEPTH_TEST ) : glEnable( GL_DEPTH_TEST );
-  } break;
+  }
 
-  case Qt::Key_W:
-  case Qt::Key_Up: {
+  if( keyStatus( Qt::Key_W ) == ON || keyStatus( Qt::Key_Up ) == ON ) {
     _pd->m_vPosition.setX( _pd->m_vPosition.x()-(float)sin( _pd->m_fHeading*piover180 )*0.05f );
     _pd->m_vPosition.setZ( _pd->m_vPosition.z()-(float)cos( _pd->m_fHeading*piover180 )*0.05f );
     if( _pd->m_fWalkbiasangle >= 359.0f ) {
@@ -218,10 +216,9 @@ void Lesson10::keyPressEvent( QKeyEvent* event )
       _pd->m_fWalkbiasangle += 10;
     }
     _pd->m_fWalkbias = (float)sin( _pd->m_fWalkbiasangle * piover180 )/20.0f;
-  } break;
+  }
 
-  case Qt::Key_S:
-  case Qt::Key_Down: {
+  if( keyStatus( Qt::Key_S ) == ON || keyStatus( Qt::Key_Down ) == ON ) {
     _pd->m_vPosition.setX( _pd->m_vPosition.x()+(float)sin( _pd->m_fHeading*piover180 )*0.05f );
     _pd->m_vPosition.setZ( _pd->m_vPosition.z()+(float)cos( _pd->m_fHeading*piover180 )*0.05f );
     if( _pd->m_fWalkbiasangle <= 1.0f ) {
@@ -230,33 +227,26 @@ void Lesson10::keyPressEvent( QKeyEvent* event )
       _pd->m_fWalkbiasangle -= 10;
     }
     _pd->m_fWalkbias = (float)sin( _pd->m_fWalkbiasangle * piover180 )/20.0f;
-  } break;
+  }
 
-  case Qt::Key_A:
-  case Qt::Key_Left: {
+  if( keyStatus( Qt::Key_A ) == ON || keyStatus( Qt::Key_Left ) == ON ) {
     _pd->m_fHeading += 1.0f;
     _pd->m_rAngle.setY( _pd->m_fHeading );
-  } break;
+  }
 
-  case Qt::Key_D:
-  case Qt::Key_Right: {
+  if( keyStatus( Qt::Key_D ) == ON || keyStatus( Qt::Key_Right ) == ON ) {
     _pd->m_fHeading -= 1.0f;
     _pd->m_rAngle.setY( _pd->m_fHeading );
-  } break;
+  }
 
-  case Qt::Key_Q:
-  case Qt::Key_PageUp: {
+  if( keyStatus( Qt::Key_Q ) == ON || keyStatus( Qt::Key_PageUp ) == ON ) {
     _pd->m_zOffset -= 0.02f;
     _pd->m_fLookupdown -= 1.0f;
-  } break;
+  }
 
-  case Qt::Key_E:
-  case Qt::Key_PageDown: {
+  if( keyStatus( Qt::Key_E ) == ON || keyStatus( Qt::Key_PageDown ) == ON ) {
     _pd->m_zOffset += 0.02f;
     _pd->m_fLookupdown += 1.0f;
-  } break;
-
-  default: GLWidget::keyPressEvent( event );
   }
 
   updateGL();

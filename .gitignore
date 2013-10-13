@@ -20,6 +20,7 @@ Makefile*
 *-build-*
 debug
 release
+bin
 
 # VS
 ipch

@@ -21,7 +21,7 @@ protected:
 
   void idleFunc();
 
-  virtual void keyPressEvent( QKeyEvent* event );
+  virtual void keyStatusChanged();
 
 private:
 

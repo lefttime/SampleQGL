@@ -161,42 +161,38 @@ void Lesson07::idleFunc()
   updateGL();
 }
 
-void Lesson07::keyPressEvent( QKeyEvent* event )
+void Lesson07::keyStatusChanged()
 {
-  switch( event->key() ) {
-  case Qt::Key_L: {
+  if( keyStatus( Qt::Key_L ) == ON ) {
     _pd->m_bLight = !_pd->m_bLight;
     _pd->m_bLight ? glEnable( GL_LIGHTING ) : glDisable( GL_LIGHTING );
-  } break;
+  }
 
-  case Qt::Key_F: {
+  if( keyStatus( Qt::Key_F ) == ON ) {
     _pd->changeFilter();
-  } break;
+  }
 
-  case Qt::Key_PageUp: {
+  if( keyStatus( Qt::Key_PageUp ) == ON ) {
     _pd->m_zOffset -= 0.02f;
-  } break;
+  }
 
-  case Qt::Key_PageDown: {
+  if( keyStatus( Qt::Key_PageDown ) == ON ) {
     _pd->m_zOffset += 0.02f;
-  } break;
+  }
 
-  case Qt::Key_Up: {
+  if( keyStatus( Qt::Key_W ) == ON || keyStatus( Qt::Key_Up ) == ON ) {
     _pd->m_rSpeed.setX( _pd->m_rSpeed.x()-0.01f );
-  } break;
+  }
 
-  case Qt::Key_Down: {
+  if( keyStatus( Qt::Key_S ) == ON || keyStatus( Qt::Key_Down ) == ON ) {
     _pd->m_rSpeed.setX( _pd->m_rSpeed.x()+0.01f );
-  } break;
+  }
 
-  case Qt::Key_Left: {
+  if( keyStatus( Qt::Key_A ) == ON || keyStatus( Qt::Key_Left ) == ON ) {
     _pd->m_rSpeed.setY( _pd->m_rSpeed.y()-0.01f );
-  } break;
+  }
 
-  case Qt::Key_Right: {
+  if( keyStatus( Qt::Key_D ) == ON || keyStatus( Qt::Key_Right ) == ON ) {
     _pd->m_rSpeed.setY( _pd->m_rSpeed.y()+0.01f );
-  } break;
-
-  default: GLWidget::keyPressEvent( event );
   }
 }

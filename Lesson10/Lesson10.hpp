@@ -19,7 +19,7 @@ protected:
   virtual void initializeGL();
   virtual void resizeGL( int width, int height );
 
-  virtual void keyPressEvent( QKeyEvent* event );
+  virtual void keyStatusChanged();
 
 private:
 

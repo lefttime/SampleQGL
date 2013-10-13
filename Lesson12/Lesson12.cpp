@@ -148,30 +148,22 @@ void Lesson12::resizeGL(int width, int height)
   glMatrixMode( GL_MODELVIEW );
 }
 
-void Lesson12::keyPressEvent( QKeyEvent* event )
+void Lesson12::keyStatusChanged()
 {
-  switch( event->key() ) {
-  case Qt::Key_W:
-  case Qt::Key_Up: {
+  if( keyStatus( Qt::Key_W ) == ON || keyStatus( Qt::Key_Up ) == ON ) {
     _pd->m_rAngle.setX( _pd->m_rAngle.x()-2 );
-  } break;
+  }
 
-  case Qt::Key_S:
-  case Qt::Key_Down: {
+  if( keyStatus( Qt::Key_S ) == ON || keyStatus( Qt::Key_Down ) == ON ) {
     _pd->m_rAngle.setX( _pd->m_rAngle.x()+2 );
-  } break;
+  }
 
-  case Qt::Key_A:
-  case Qt::Key_Left: {
+  if( keyStatus( Qt::Key_A ) == ON || keyStatus( Qt::Key_Left ) == ON ) {
     _pd->m_rAngle.setY( _pd->m_rAngle.y()-2 );
-  } break;
+  }
 
-  case Qt::Key_D:
-  case Qt::Key_Right: {
+  if( keyStatus( Qt::Key_D ) == ON || keyStatus( Qt::Key_Right ) == ON ) {
     _pd->m_rAngle.setY( _pd->m_rAngle.y()+2 );
-  } break;
-
-  default: GLWidget::keyPressEvent( event );
   }
   updateGL();
 }

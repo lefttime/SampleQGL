@@ -13,13 +13,21 @@
 #include "Lesson10/Lesson10.hpp"
 #include "Lesson11/Lesson11.hpp"
 #include "Lesson12/Lesson12.hpp"
+#include "Lesson13/Lesson13.hpp"
+#include "Lesson14/Lesson14.hpp"
+#include "Lesson15/Lesson15.hpp"
+#include "Lesson16/Lesson16.hpp"
+#include "Lesson17/Lesson17.hpp"
+#include "Lesson18/Lesson18.hpp"
+#include "Lesson19/Lesson19.hpp"
+#include "Lesson20/Lesson20.hpp"
 
 int main( int argc, char* argv[] )
 {
   qsrand( (unsigned)time( 0 ) );
   QApplication app( argc, argv );
   
-  Lesson12 sample;
+  Lesson20 sample;
   sample.show();
 
   return app.exec();

@@ -1,4 +1,4 @@
-#include "Lesson08.hpp"
+#include "Lesson16.hpp"
 
 #include <QPixmap>
 #include <QVector2D>
@@ -6,21 +6,24 @@
 #include <QVector4D>
 #include <QKeyEvent>
 
-class Lesson08::Lesson08Private
+GLuint fogfilter = 0;								                // Which Fog Mode To Use 
+GLuint fogMode[] = { GL_EXP, GL_EXP2, GL_LINEAR };	// Storage For Three Types Of Fog
+GLfloat	fogColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f  };	// Fog Color
+
+class Lesson16::Lesson16Private
 {
 public:
 
-  Lesson08Private( Lesson08* me ) : m_self( me ) {
+  Lesson16Private( Lesson16* me ) : m_self( me ) {
   }
 
-  ~Lesson08Private() {
+  ~Lesson16Private() {
     m_self->deleteTexture( m_texture );
   }
 
   void init() {
     m_zOffset = -5.0f;
     m_bLight = true;
-    m_bBlend = false;
     m_rAngle = QVector2D(0, 0);
     m_rSpeed = QVector2D(0, 0);
 
@@ -86,11 +89,10 @@ public:
     glEnd();
   }
 
-  Lesson08*         m_self;
+  Lesson16*         m_self;
   GLuint            m_texture;
 
   bool              m_bLight;
-  bool              m_bBlend;
   QVector2D         m_rAngle;
   QVector2D         m_rSpeed;
   float             m_zOffset;
@@ -101,40 +103,43 @@ public:
   GLfloat           m_lPosition[4];
 };
 
-Lesson08::Lesson08( QWidget* parent ) : GLWidget( parent ), _pd( new Lesson08Private( this ) )
+Lesson16::Lesson16( QWidget* parent ) : GLWidget( parent ), _pd( new Lesson16Private( this ) )
 {
-  setWindowTitle( "Lesson08" );
+  setWindowTitle( "Lesson16" );
   _pd->init();
 }
 
-Lesson08::~Lesson08()
+Lesson16::~Lesson16()
 {
 }
 
-void Lesson08::initializeGL()
+void Lesson16::initializeGL()
 {
-  glEnable( GL_TEXTURE_2D );
-  glShadeModel( GL_SMOOTH );
-  qglClearColor( Qt::black );
+  glEnable( GL_TEXTURE_2D );							              // Enable Texture Mapping
+  glShadeModel( GL_SMOOTH );							              // Enable Smooth Shading
+  glClearColor( 0.5f, 0.5f, 0.5f, 1.0f );					      // We'll Clear To The Color Of The Fog
+  glClearDepth( 1.0f );									                // Depth Buffer Setup
+  glEnable( GL_DEPTH_TEST );							              // Enables Depth Testing
+  glDepthFunc( GL_LEQUAL );								              // The Type Of Depth Testing To Do
+  glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );  // Really Nice Perspective Calculations
 
-  glClearDepth( 1.0f );
-  glEnable( GL_DEPTH_TEST );
-  glDepthFunc( GL_LEQUAL );
+  glLightfv( GL_LIGHT1, GL_AMBIENT,  _pd->m_lAmbient );	// Setup The Ambient Light
+  glLightfv( GL_LIGHT1, GL_DIFFUSE,  _pd->m_lDiffuse );	// Setup The Diffuse Light
+  glLightfv( GL_LIGHT1, GL_POSITION, _pd->m_lPosition);	// Position The Light
+  glEnable( GL_LIGHT1 );								                // Enable Light One
 
-  glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
+  glFogi( GL_FOG_MODE,  fogMode[fogfilter] );			      // Fog Mode
+  glFogfv( GL_FOG_COLOR, fogColor );					          // Set Fog Color
+  glFogf( GL_FOG_DENSITY, 0.35f );						          // How Dense Will The Fog Be
+  glHint( GL_FOG_HINT, GL_DONT_CARE );					        // Fog Hint Value
+  glFogf( GL_FOG_START, 1.0f );							            // Fog Start Depth
+  glFogf( GL_FOG_END, 5.0f );							              // Fog End Depth
+  glEnable( GL_FOG );									                  // Enables GL_FOG
 
-  _pd->m_texture = bindTexture( QPixmap( ":/Resources/Glass.png" ), GL_TEXTURE_2D );
-
-  glEnable( GL_LIGHT1 );
-  glLightfv( GL_LIGHT1, GL_AMBIENT,  _pd->m_lAmbient  );
-  glLightfv( GL_LIGHT1, GL_DIFFUSE,  _pd->m_lDiffuse  );
-  glLightfv( GL_LIGHT1, GL_POSITION, _pd->m_lPosition );
-
-  glColor4f( 1.0f, 1.0f, 1.0f, 0.5f );
-  glBlendFunc( GL_SRC_ALPHA, GL_ONE );
+  _pd->m_texture = bindTexture( QPixmap( ":/Resources/Crate.PNG" ), GL_TEXTURE_2D );
 }
 
-void Lesson08::paintGL()
+void Lesson16::paintGL()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
@@ -148,7 +153,7 @@ void Lesson08::paintGL()
   _pd->drawCube();
 }
 
-void Lesson08::resizeGL(int width, int height)
+void Lesson16::resizeGL(int width, int height)
 {
   glViewport( 0, 0, width, height );
 
@@ -160,22 +165,21 @@ void Lesson08::resizeGL(int width, int height)
   glMatrixMode( GL_MODELVIEW );
 }
 
-void Lesson08::idleFunc()
+void Lesson16::idleFunc()
 {
   _pd->m_rAngle += _pd->m_rSpeed;
   updateGL();
 }
 
-void Lesson08::keyStatusChanged()
+void Lesson16::keyStatusChanged()
 {
-  if( keyStatus( Qt::Key_B ) == ON ) {
-    _pd->m_bBlend = !_pd->m_bBlend;
-    _pd->m_bBlend ? glEnable( GL_BLEND ) : glDisable( GL_BLEND );
-    _pd->m_bBlend ? glDisable( GL_DEPTH_TEST ) : glEnable( GL_DEPTH_TEST );
-  }
-
   if( keyStatus( Qt::Key_F ) == ON ) {
     _pd->changeFilter();
+  }
+
+  if( keyStatus( Qt::Key_G ) == ON ) {
+    fogfilter = (fogfilter+1) % 3;
+    glFogi( GL_FOG_MODE,  fogMode[fogfilter] );
   }
 
   if( keyStatus( Qt::Key_L ) == ON ) {
@@ -183,11 +187,11 @@ void Lesson08::keyStatusChanged()
     _pd->m_bLight ? glEnable( GL_LIGHTING ) : glDisable( GL_LIGHTING );
   }
 
-  if( keyStatus( Qt::Key_PageUp ) == ON ) {
+  if( keyStatus( Qt::Key_Q ) == ON || keyStatus( Qt::Key_PageUp ) == ON ) {
     _pd->m_zOffset -= 0.02f;
   }
 
-  if( keyStatus( Qt::Key_PageDown ) == ON ) {
+  if( keyStatus( Qt::Key_E ) == ON || keyStatus( Qt::Key_PageDown ) == ON ) {
     _pd->m_zOffset += 0.02f;
   }
 

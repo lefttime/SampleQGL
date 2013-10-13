@@ -131,29 +131,25 @@ void Lesson09::idleFunc()
   updateGL();
 }
 
-void Lesson09::keyPressEvent( QKeyEvent* event )
+void Lesson09::keyStatusChanged()
 {
-  switch( event->key() ) {
-  case Qt::Key_T: {
+  if( keyStatus( Qt::Key_T ) == ON ) {
     _pd->m_bTwinkle = !_pd->m_bTwinkle;
-  } break;
+  }
 
-  case Qt::Key_Up: {
+  if( keyStatus( Qt::Key_W ) == ON || keyStatus( Qt::Key_Up ) == ON ) {
     _pd->m_fTilt -= 0.5f;
-  } break;
+  }
 
-  case Qt::Key_Down: {
+  if( keyStatus( Qt::Key_S ) == ON || keyStatus( Qt::Key_Down ) == ON ) {
     _pd->m_fTilt += 0.5f;
-  } break;
+  }
 
-  case Qt::Key_PageUp: {
+  if( keyStatus( Qt::Key_PageUp ) == ON ) {
     _pd->m_fZoom -= 0.2f;
-  } break;
+  }
 
-  case Qt::Key_PageDown: {
+  if( keyStatus( Qt::Key_PageDown ) == ON ) {
     _pd->m_fZoom += 0.2f;
-  } break;
-
-  default: GLWidget::keyPressEvent( event );
   }
 }
