@@ -2,6 +2,7 @@
 
 #include <QMap>
 #include <QTimer>
+#include <QtDebug>
 
 class GLWidget::GLWidgetPrivate
 {
@@ -90,15 +91,23 @@ void GLWidget::keyPressEvent( QKeyEvent* event )
 {
   if( event->key() == Qt::Key_F12 ) {
     isFullScreen() ? setWindowState( Qt::WindowNoState ) : setWindowState( Qt::WindowFullScreen );
+  } else if( event->key() == Qt::Key_Escape ) {
+    this->close();
   } else {
-    _pd->m_keyStatus[event->key()] = GLWidget::ON;
-    keyStatusChanged();
+    if( !event->isAutoRepeat() && _pd->m_keyStatus[event->key()]==OFF ){
+      _pd->m_keyStatus[event->key()] = GLWidget::ON;
+      keyStatusChanged();
+    }
   }
+  QGLWidget::keyPressEvent( event );
 }
 
 void GLWidget::keyReleaseEvent( QKeyEvent* event )
 {
-  _pd->m_keyStatus[event->key()] = GLWidget::OFF;
+  if( _pd->m_keyStatus[event->key()]==ON && !event->isAutoRepeat() ){
+    _pd->m_keyStatus[event->key()] = GLWidget::OFF;
+  }
+  QGLWidget::keyReleaseEvent( event );
 }
 
 void GLWidget::mousePressEvent( QMouseEvent* event )

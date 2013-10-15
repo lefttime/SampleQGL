@@ -136,18 +136,6 @@ void Lesson12::paintGL()
   }
 }
 
-void Lesson12::resizeGL(int width, int height)
-{
-  glViewport( 0, 0, width, height );
-
-  glMatrixMode( GL_PROJECTION );
-  glLoadIdentity();
-
-  gluPerspective( 45.0f, (GLfloat)width/(GLfloat)height, 0.1f, 100.0f );
-
-  glMatrixMode( GL_MODELVIEW );
-}
-
 void Lesson12::keyStatusChanged()
 {
   if( keyStatus( Qt::Key_W ) == ON || keyStatus( Qt::Key_Up ) == ON ) {

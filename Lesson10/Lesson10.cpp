@@ -186,19 +186,6 @@ void Lesson10::paintGL()
   _pd->drawWorld();
 }
 
-void Lesson10::resizeGL( int width, int height )
-{
-  glViewport( 0, 0, width, height );
-
-  glMatrixMode( GL_PROJECTION );
-  glLoadIdentity();
-  gluPerspective( 45.0f, (GLfloat)width/(GLfloat)height, 0.1f, 100.0f );
-
-  glMatrixMode( GL_MODELVIEW );
-  glLoadIdentity();
-
-}
-
 void Lesson10::keyStatusChanged()
 {
   if( keyStatus( Qt::Key_B ) == ON ) {

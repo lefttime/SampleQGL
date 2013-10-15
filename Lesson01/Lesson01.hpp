@@ -17,7 +17,6 @@ protected:
 
   virtual void paintGL();
   virtual void initializeGL();
-  virtual void resizeGL( int width, int height );
 };
 
 #endif // LESSON01_HPP

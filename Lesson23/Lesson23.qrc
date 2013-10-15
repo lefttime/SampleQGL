@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Resources/BG.PNG</file>
+        <file>Resources/Reflect.PNG</file>
+    </qresource>
+</RCC>

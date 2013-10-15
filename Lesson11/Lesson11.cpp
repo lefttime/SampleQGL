@@ -108,18 +108,6 @@ void Lesson11::paintGL()
   _pd->drawMesh();
 }
 
-void Lesson11::resizeGL(int width, int height)
-{
-  glViewport( 0, 0, width, height );
-
-  glMatrixMode( GL_PROJECTION );
-  glLoadIdentity();
-
-  gluPerspective( 45.0f, (GLfloat)width/(GLfloat)height, 0.1f, 100.0f );
-
-  glMatrixMode( GL_MODELVIEW );
-}
-
 void Lesson11::idleFunc()
 {
   if( _pd->m_wiggleCount == 2 ) {

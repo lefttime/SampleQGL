@@ -45,15 +45,3 @@ void Lesson02::paintGL()
   }
   glEnd();
 }
-
-void Lesson02::resizeGL(int width, int height)
-{
-  glViewport( 0, 0, width, height );
-
-  glMatrixMode( GL_PROJECTION );
-  glLoadIdentity();
-
-  gluPerspective( 45.0f, (GLfloat)width/(GLfloat)height, 0.1f, 100.0f );
-
-  glMatrixMode( GL_MODELVIEW );
-}

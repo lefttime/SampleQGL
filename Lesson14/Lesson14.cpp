@@ -95,18 +95,6 @@ void Lesson14::paintGL()
   _pd->drawText( content );
 }
 
-void Lesson14::resizeGL(int width, int height)
-{
-  glViewport( 0, 0, width, height );
-
-  glMatrixMode( GL_PROJECTION );
-  glLoadIdentity();
-
-  gluPerspective( 45.0f, (GLfloat)width/(GLfloat)height, 0.1f, 100.0f );
-
-  glMatrixMode( GL_MODELVIEW );
-}
-
 void Lesson14::idleFunc()
 {
   _pd->m_fRot += 0.5f;

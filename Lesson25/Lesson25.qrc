@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Resources/Sphere.txt</file>
+        <file>Resources/Torus.txt</file>
+        <file>Resources/Tube.txt</file>
+    </qresource>
+</RCC>

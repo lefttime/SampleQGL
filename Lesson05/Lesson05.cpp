@@ -117,18 +117,6 @@ void Lesson05::paintGL()
   _pd->drawCube();
 }
 
-void Lesson05::resizeGL(int width, int height)
-{
-  glViewport( 0, 0, width, height );
-
-  glMatrixMode( GL_PROJECTION );
-  glLoadIdentity();
-
-  gluPerspective( 45.0f, (GLfloat)width/(GLfloat)height, 0.1f, 100.0f );
-
-  glMatrixMode( GL_MODELVIEW );
-}
-
 void Lesson05::idleFunc()
 {
   float angle = 2;

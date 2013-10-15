@@ -168,18 +168,6 @@ void Lesson17::paintGL()
   _pd->glPrint( int(242+200*cos((cnt2+cnt1)/5)), 2, "Giuseppe D'Agata", 0 );
 }
 
-void Lesson17::resizeGL(int width, int height)
-{
-  glViewport( 0, 0, width, height );
-
-  glMatrixMode( GL_PROJECTION );
-  glLoadIdentity();
-
-  gluPerspective( 45.0f, (GLfloat)width/(GLfloat)height, 0.1f, 100.0f );
-
-  glMatrixMode( GL_MODELVIEW );
-}
-
 void Lesson17::idleFunc()
 {
   cnt1 += 0.01f;    // Increase The First Counter

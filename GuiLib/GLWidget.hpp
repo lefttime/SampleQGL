@@ -44,7 +44,6 @@ private:
   
   class GLWidgetPrivate;
   QScopedPointer<GLWidgetPrivate>         _pd;
-
 };
 
 #endif // GLWIDGET_HPP
