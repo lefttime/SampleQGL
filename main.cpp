@@ -26,13 +26,14 @@
 #include "Lesson23/Lesson23.hpp"
 #include "Lesson24/Lesson24.hpp"
 #include "Lesson25/Lesson25.hpp"
+#include "Lesson26/Lesson26.hpp"
 
 int main( int argc, char* argv[] )
 {
   qsrand( (unsigned)time( 0 ) );
   QApplication app( argc, argv );
   
-  Lesson25 sample;
+  Lesson26 sample;
   sample.show();
 
   return app.exec();
